@@ -121,7 +121,7 @@ client = MyClient()
 async def on_ready():
     await client.change_presence(
         status=discord.Status.online,
-        activity=discord.Game(name="✅ Service Status: Online 📘 Documentation: use /doc <product> 🛒 Purchases & delivery are handled via Sellhub 🆘 For help, open a support ticket or check the docs")
+        activity=discord.Game(name="/doc")
     )
     print(f"Logged in as {client.user}")
 
