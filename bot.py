@@ -132,6 +132,19 @@ def slugify(text: str) -> str:
     t = re.sub(r"[^a-z0-9\-]", "", t)   # remove unsafe chars
     return t
 
+@client.tree.command(name="status", description="Show bot and service status.")
+async def status(interaction: discord.Interaction):
+    message = (
+        "**✅ Service Status: Online**\n\n"
+        "📘 Documentation: use `/doc <product>`\n"
+        "🛒 Purchases & delivery are handled via Sellhub\n"
+        "🆘 For help, open a support ticket or check the docs\n\n"
+        "Bot is running normally."
+    )
+
+    await interaction.response.send_message(message)
+
+
 @client.tree.command(name="doc", description="Get the GitBook doc link for a product.")
 @app_commands.describe(productname="Pick a product")
 @app_commands.autocomplete(productname=product_autocomplete)
