@@ -14,6 +14,33 @@ if not TOKEN:
 if not GITBOOK_BASE.startswith("http"):
     raise RuntimeError("Missing/invalid GITBOOK_BASE in .env (must start with https://...)")
 
+import threading
+import os
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+def start_web_server():
+    # Render provides PORT; locally you can default to 10000
+    port = int(os.getenv("PORT", "10000"))
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            # simple health endpoint
+            if self.path in ("/", "/healthz"):
+                self.send_response(200)
+                self.send_header("Content-Type", "text/plain; charset=utf-8")
+                self.end_headers()
+                self.wfile.write(b"ok")
+            else:
+                self.send_response(404)
+                self.end_headers()
+
+        # keep logs quiet
+        def log_message(self, format, *args):
+            return
+
+    server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
+    server.serve_forever()
+
 DOCS = {
     # Rainbow Six Siege
     "lethal": "rainbow-six-siege./lethal-lite-and-full-r6s",
@@ -109,5 +136,5 @@ async def doc(interaction: discord.Interaction, productname: str):
     url = f"{GITBOOK_BASE}{path.lstrip('/')}"
     await interaction.response.send_message(url)
 
-
+threading.Thread(target=start_web_server, daemon=True).start()
 client.run(TOKEN)
