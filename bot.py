@@ -110,8 +110,10 @@ class MyClient(discord.Client):
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # Sync commands (global). If it takes too long to appear, we can switch to guild-only sync.
-        await self.tree.sync()
+        guild = discord.Object(id=1427813707718590619)
+        self.tree.copy_global_to(guild=guild)
+        await self.tree.sync(guild=guild)
+
 
 client = MyClient()
 
