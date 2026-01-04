@@ -191,6 +191,20 @@ async def uptime(interaction: discord.Interaction):
     seconds = int(time.time() - START_TIME)
     await interaction.response.send_message(f"Uptime: **{format_uptime(seconds)}**")
 
+PRODUCTS = [
+    ("Crusader", "https://zoomcheats.mysellauth.com/product/crusaderexternal"),
+    ("MEK Rust", "https://zoomcheats.mysellauth.com/product/mek-rust"),
+    ("Vega R6", "https://zoomcheats.mysellauth.com/product/vega-external-r6s"),
+    ("Rust Accounts", "https://zoomcheats.mysellauth.com/product/rust-accounts"),
+]
+
+@client.tree.command(name="product", description="List available products and purchase links.")
+async def product(interaction: discord.Interaction):
+    lines = ["**Products for sale:**", ""]
+    for name, url in PRODUCTS:
+        lines.append(f"• **{name}** — {url}")
+    await interaction.response.send_message("\n".join(lines))
+
 
 @client.tree.command(name="faq", description="Frequently asked questions.")
 async def faq(interaction: discord.Interaction):
