@@ -146,6 +146,14 @@ async def status(interaction: discord.Interaction):
 
     await interaction.response.send_message(message)
 
+REFUND_POLICY_URL = "https://zoomcheats.mysellauth.com/refund-policy"
+
+@client.tree.command(name="refund", description="Get the refund policy link.")
+async def refund(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        f"Refund Policy: {REFUND_POLICY_URL}"
+    )
+
 
 @client.tree.command(name="doc", description="Get the GitBook doc link for a product.")
 @app_commands.describe(productname="Pick a product")
