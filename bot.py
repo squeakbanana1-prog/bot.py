@@ -40,6 +40,15 @@ def start_web_server():
 
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     server.serve_forever()
+import time
+
+BUY_URL = "https://zoomcheats.mysellauth.com/"
+FAQ_URL = "https://zoomcheats.gitbook.io/zoomcheats"  # optional; can be your GitBook FAQ page or a Discord message link
+BOT_VERSION = "1.0.0"  # bump this when you deploy changes
+
+START_TIME = time.time()
+
+
 
 DOCS = {
     # Rainbow Six Siege
@@ -153,6 +162,66 @@ async def refund(interaction: discord.Interaction):
     await interaction.response.send_message(
         f"Refund Policy: {REFUND_POLICY_URL}"
     )
+
+def format_uptime(seconds: int) -> str:
+    days, rem = divmod(seconds, 86400)
+    hours, rem = divmod(rem, 3600)
+    minutes, secs = divmod(rem, 60)
+    if days > 0:
+        return f"{days}d {hours}h {minutes}m {secs}s"
+    if hours > 0:
+        return f"{hours}h {minutes}m {secs}s"
+    if minutes > 0:
+        return f"{minutes}m {secs}s"
+    return f"{secs}s"
+
+
+@client.tree.command(name="buy", description="Get the purchase link.")
+async def buy(interaction: discord.Interaction):
+    await interaction.response.send_message(f"🛒 Buy here: {BUY_URL}")
+
+
+@client.tree.command(name="version", description="Show the bot version.")
+async def version(interaction: discord.Interaction):
+    await interaction.response.send_message(f"Bot version: **{BOT_VERSION}**")
+
+
+@client.tree.command(name="uptime", description="Show how long the bot has been running.")
+async def uptime(interaction: discord.Interaction):
+    seconds = int(time.time() - START_TIME)
+    await interaction.response.send_message(f"Uptime: **{format_uptime(seconds)}**")
+
+
+@client.tree.command(name="faq", description="Frequently asked questions.")
+async def faq(interaction: discord.Interaction):
+    lines = [
+        "**FAQ**",
+        "",
+        "• **How do I buy?** Use `/buy` (delivery is handled automatically after purchase).",
+        "• **Where are the docs?** Use `/doc <product>`.",
+        "• **Refunds?** Use `/refund`.",
+        "• **Need help?** Ask in the support channel or open a ticket (if available).",
+    ]
+    if FAQ_URL:
+        lines.append(f"\nMore: {FAQ_URL}")
+
+    await interaction.response.send_message("\n".join(lines))
+
+
+@client.tree.command(name="help", description="Show all available commands and links.")
+async def help_cmd(interaction: discord.Interaction):
+    lines = [
+        "**Help / Commands**",
+        "",
+        "📘 `/doc <product>` — Get documentation link",
+        "🛒 `/buy` — Purchase link",
+        "🧾 `/refund` — Refund policy",
+        "✅ `/status` — Service status",
+        "⏱️ `/uptime` — Bot uptime",
+        "🔖 `/version` — Bot version",
+        "❓ `/faq` — Common questions",
+    ]
+    await interaction.response.send_message("\n".join(lines), ephemeral=True)
 
 
 @client.tree.command(name="doc", description="Get the GitBook doc link for a product.")
