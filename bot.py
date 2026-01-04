@@ -41,6 +41,14 @@ def start_web_server():
     server = ThreadingHTTPServer(("0.0.0.0", port), Handler)
     server.serve_forever()
 
+@client.event
+async def on_ready():
+    await client.change_presence(
+        status=discord.Status.online,
+        activity=discord.Game(name="/doc for documentation")
+    )
+    print(f"Logged in as {client.user}")
+
 DOCS = {
     # Rainbow Six Siege
     "lethal": "rainbow-six-siege./lethal-lite-and-full-r6s",
